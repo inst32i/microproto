@@ -7,18 +7,22 @@
 import pandas as pd
 from sklearn import preprocessing
 import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
+import importlib
+importlib.reload(sys)
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 import decimal
 import math
 import numpy as np
 from numpy.linalg import *
 import datetime
+import os
 from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
 
 def getLabel(filename):
-    csvdata = pd.read_csv(filename, header = 0)
+    tmppath = os.path.split(os.path.realpath(__file__))[0] + filename
+    csvdata = pd.read_csv(tmppath, header = 0)
     labels = csvdata.columns.tolist()
     labels[0] = 'index'
     return labels
