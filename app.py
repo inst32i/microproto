@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS
 import manifoldAlgorithm as mf
 import os
+import json
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -24,11 +25,31 @@ def upload():
         upload_path = os.path.join(basepath, 'uploads',secure_filename(f.filename))  #注意：没有的文件夹一定要先创建，不然会提示没有该路径
         f.save(upload_path)
         # Labels = mf.getLabel("uploads/"+f.filename)
-        Labels = mf.getLabel("\\uploads\\"+f.filename)
+        rootPath = os.path.split(os.path.realpath(__file__))[0]
+        Labels = mf.getLabel(rootPath + "/uploads/" + f.filename)
         # Labels = [1, 2, 3]
         result = {
             "labels":Labels,
-            "path": "uploads/"+f.filename
+            "path": rootPath + "/uploads/" + f.filename
+        }
+        resp = make_response(jsonify(result))  # 响应体
+        resp.headers["Access-Control-Allow-Origin"] = "*"  # 设置响应头
+        return resp
+    resp = make_response(jsonify("没有"))  # 响应体
+    resp.headers["Access-Control-Allow-Origin"] = "*"  # 设置响应头
+    return resp
+
+@app.route('/calc', methods=['POST', 'GET'])
+def calrisk():
+    print(request)
+    if request.method == 'POST':
+        data = json.loads(request.get_data("data"))
+        labels = data["checkedLabels"]
+        path = data["filePath"]
+        values, times, T = mf.calRisk(path, labels)
+        result = {                           #result保存时间与风险倍数
+                "time":T,
+                "value": times	
         }
         resp = make_response(jsonify(result))  # 响应体
         resp.headers["Access-Control-Allow-Origin"] = "*"  # 设置响应头

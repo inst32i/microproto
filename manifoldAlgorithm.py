@@ -21,8 +21,7 @@ from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
 
 def getLabel(filename):
-    tmppath = os.path.split(os.path.realpath(__file__))[0] + filename
-    csvdata = pd.read_csv(tmppath, header = 0)
+    csvdata = pd.read_csv(filename, header = 0)
     labels = csvdata.columns.tolist()
     labels[0] = 'index'
     return labels
@@ -113,6 +112,7 @@ def calRisk(filename, Labels):
     normalRows = 529918           #经计算得到的
     newdata = pd.read_csv(filename)
     Time = set(newdata['Timestamp'])
+    Labels.append('Timestamp')
     newdata = newdata[Labels]
 
     datachunk = []
@@ -125,6 +125,8 @@ def calRisk(filename, Labels):
     values = []
     times = []
     for data in datachunk:
+        print(data)
+        data.drop('Timestamp', axis = 1)
         dosData = data.values.tolist()
         dosStartRow = 1
         dosEndRow = len(dosData)
