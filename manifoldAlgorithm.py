@@ -125,7 +125,6 @@ def calRisk(filename, Labels):
     values = []
     times = []
     for data in datachunk:
-        print(data)
         data.drop('Timestamp', axis = 1)
         dosData = data.values.tolist()
         dosStartRow = 1
@@ -146,7 +145,9 @@ def calRisk(filename, Labels):
     
 if __name__ == '__main__':
     filename = 'testData.csv'
-    Labels = ["Source IP", "Source Port", "Destination IP", "Destination Port", "Protocol", "Timestamp", "Flow Duration"]
+    Labels = getLabel(filename)
+    Labels = Labels[10:20]
+    print (Labels)
     values, times, T = calRisk(filename,Labels)
-    print [values, times, T]
+    print ([values, times, T])
         
