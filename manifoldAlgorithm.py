@@ -21,10 +21,24 @@ from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
 
 def getLabel(filename):
-    csvdata = pd.read_csv(filename, header = 0)
+    csvdata = pd.read_csv(filename, header=0)
     labels = csvdata.columns.tolist()
     labels[0] = 'index'
-    return labels
+    labels1 = labels[8:]
+    dosData = csvdata.values.tolist()
+    dosStartRow = 1
+    dosEndRow = len(dosData)
+    dosStartCol = 8
+    dosEndCol = len(dosData[0])
+    dosTables = getContent(dosData, dosStartRow, dosEndRow, dosStartCol, dosEndCol)
+    dosNoDemTable = process_table(dosTables)
+    dosNoDemTable_var = np.var(dosNoDemTable, axis=0)
+    for i in range(len(dosNoDemTable_var) - 1):
+        for j in range(i + 1, len(dosNoDemTable_var)):
+            if dosNoDemTable_var[i] < dosNoDemTable_var[j]:
+                dosNoDemTable_var[i], dosNoDemTable_var[j] = dosNoDemTable_var[j], dosNoDemTable_var[i]
+                labels1[i], labels1[j] = labels1[j], labels1[i]
+    return labels, labels1[0:10]
 
 # 无量纲化处理
 def process_table(tables):
