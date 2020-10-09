@@ -25,10 +25,12 @@ def upload():
         f.save(upload_path)
         # Labels = mf.getLabel("uploads/"+f.filename)
         rootPath = os.path.split(os.path.realpath(__file__))[0]
-        Labels = mf.getLabel(rootPath + "/uploads/" + f.filename)
+        Labels, selectLabels = mf.getLabel(rootPath + "/uploads/" + f.filename)
         # Labels = [1, 2, 3]
+        print(selectLabels)
         result = {
             "labels":Labels,
+            "selectLabels":selectLabels,
             "path": rootPath + "/uploads/" + f.filename
         }
         resp = make_response(jsonify(result))  # 响应体
