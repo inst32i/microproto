@@ -18,7 +18,6 @@ def ping_pong():
 
 @app.route('/upload', methods=['POST', 'GET'])
 def upload():
-    print(request.files['pic_file'])
     if request.method == 'POST':
         f = request.files['pic_file']
         basepath = os.path.dirname(__file__)  # 当前文件所在路径
@@ -41,7 +40,6 @@ def upload():
 
 @app.route('/calc', methods=['POST', 'GET'])
 def calrisk():
-    print(request)
     if request.method == 'POST':
         data = json.loads(request.get_data("data"))
         labels = data["checkedLabels"]
