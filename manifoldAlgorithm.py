@@ -48,6 +48,40 @@ def process_table(tables):
     table_scaled2 = scaler.transform(tables)
     return table_scaled2
 
+# 获取指标对
+def pairsOfIp(filename):
+    data = pd.read_csv(filename)
+    pair = data[["Source IP", "Destination IP"]]
+    countS = pair["Source IP"].value_counts() > 6
+    countD = pair["Destination IP"].value_counts() > 6
+    srIpList = countS[countS].keys().tolist()
+    desIpList = countD[countD].keys().tolist()
+    pair1 = pair[pair["Source IP"].isin(srIpList)]
+    pair2 = pair1[pair1["Destination IP"].isin(desIpList)]
+    pair3 = pair2.drop_duplicates()
+    datalist = np.array(pair3).tolist()
+    
+    totalList = srIpList+desIpList
+    lenList = len(totalList)
+    ipIdx = {}
+    for i in range(lenList):
+        ipIdx[totalList[i]] = i
+    
+    pi = 3.1416
+    ipLocByIdx = []
+    for i in range(lenList):
+        ipLocByIdx.append([i,(2 * pi * i) / lenList])
+
+    pairs = []
+    for i in range(len(datalist)):
+        pairs.append([ipIdx[datalist[i][0]], ipIdx[datalist[i][1]]])
+    
+    ipIdxList = []
+    for ip in ipIdx:
+        ipIdxList.append([ip,ipIdx[ip]])
+    
+    return ipIdxList, ipLocByIdx, pairs
+
 # 选取Top K 个指标
 # 根据指标变化率，求出变化率最大的K个指标的指标值
 def selectTopKIndex(tables,top):

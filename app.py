@@ -46,8 +46,12 @@ def calrisk():
         data = json.loads(request.get_data("data"))
         labels = data["checkedLabels"]
         path = data["filePath"]
+        ipIdxList, ipLocByIdx, pairs = pairsOfIp(path)
         values, times, T = mf.calRisk(path, labels)
         result = {                           #result保存时间与风险倍数
+                "ipIdxList":ipIdxList
+                "ipLocByIdx":ipLocByIdx
+                "pairs":pairs
                 "time":T,
                 "value": times	
         }
