@@ -68,19 +68,15 @@ def pairsOfIp(filename):
         ipIdx[totalList[i]] = i
     
     pi = 3.1416
-    ipLocByIdx = []
+    ipLoc = []
     for i in range(lenList):
-        ipLocByIdx.append([i,(2 * pi * i) / lenList])
+        ipLoc.append([totalList[i],(2 * pi * i) / lenList])
 
     pairs = []
     for i in range(len(datalist)):
         pairs.append([ipIdx[datalist[i][0]], ipIdx[datalist[i][1]]])
-    
-    ipIdxList = []
-    for ip in ipIdx:
-        ipIdxList.append([ip,ipIdx[ip]])
-    
-    return ipIdxList, ipLocByIdx, pairs
+        
+    return ipLoc, pairs
 
 # 选取Top K 个指标
 # 根据指标变化率，求出变化率最大的K个指标的指标值
